@@ -1,0 +1,11 @@
+flask
+streamlit
+requests
+pymupdf
+faiss-cpu
+numpy
+python-dotenv
+sentence-transformers
+groq
+torch
+transformers
