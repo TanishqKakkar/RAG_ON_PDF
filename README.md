@@ -1,241 +1,117 @@
 # 🤖 PDF RAG Chatbot
 
-A Retrieval-Augmented Generation (RAG) chatbot that allows users to upload PDF documents and ask questions based on the document content.
+A Retrieval-Augmented Generation (RAG) chatbot that lets users upload PDF documents and ask questions grounded in their content — with source citations, auto-generated summaries, and suggested questions.
 
-The system extracts text from PDFs, converts the content into embeddings, stores them in a FAISS vector database, retrieves relevant chunks based on user queries, and generates context-aware answers using a Large Language Model (LLM).
-
----
-
-# 🚀 Features
-
-* 📄 Upload PDF documents
-* 🔍 Semantic search using embeddings
-* 🧠 Retrieval-Augmented Generation (RAG)
-* 🤖 LLM-powered question answering
-* 📚 Source chunk visualization
-* 📄 Automatic document summary generation
-* 💡 Suggested questions generation
-* 💬 Interactive chatbot interface
-* 🗑 Clear chat functionality
-* 🔄 Reset application functionality
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-LLaMA_3.3-orange?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
 ---
 
-# 🏗 Architecture
+## Overview
 
-User
-↓
-Streamlit Frontend
-↓
-Flask Backend API
-↓
-PDF Processing
-↓
-Chunking
-↓
-Sentence Transformers Embeddings
-↓
-FAISS Vector Database
-↓
-Top-K Retrieval
-↓
-Groq LLM
-↓
-Answer Generation
+The system extracts text from uploaded PDFs, converts the content into embeddings, stores them in a FAISS vector database, retrieves the most relevant chunks for a user's query, and generates context-aware answers using an LLM.
 
----
+## Features
 
-# 🛠 Tech Stack
+- 📄 Upload PDF documents
+- 🔍 Semantic search using embeddings
+- 🧠 Retrieval-Augmented Generation (RAG)
+- 🤖 LLM-powered question answering
+- 📚 Source chunk visualization
+- 📄 Automatic document summary generation
+- 💡 Suggested questions generation
+- 💬 Interactive chatbot interface
+- 🗑 Clear chat / reset application
 
-## Frontend
+## Architecture
 
-* Streamlit
+```
+User → Streamlit Frontend → Flask Backend API → PDF Processing
+     → Chunking → Sentence Transformer Embeddings → FAISS Vector DB
+     → Top-K Retrieval → Groq LLM → Answer Generation
+```
 
-## Backend
+## Tech Stack
 
-* Flask
+| Layer | Tech |
+|---|---|
+| Frontend | Streamlit |
+| Backend | Flask |
+| LLM | Groq API — LLaMA 3.3 70B Versatile |
+| Embeddings | Sentence Transformers (`all-MiniLM-L6-v2`) |
+| Vector Database | FAISS |
+| PDF Processing | PyMuPDF (fitz) |
 
-## LLM
+## Project Structure
 
-* Groq API
-* Llama 3.3 70B Versatile
-
-## Embeddings
-
-* Sentence Transformers
-* all-MiniLM-L6-v2
-
-## Vector Database
-
-* FAISS
-
-## PDF Processing
-
-* PyMuPDF (fitz)
-
----
-
-# 📂 Project Structure
-
-```text
-RAG_CHATBOT/
-
-│
-├── app.py
-├── frontend.py
+```
+RAG_ON_PDF/
+├── app.py              # Flask backend
+├── frontend.py         # Streamlit frontend
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
-├── .env
-│
 ├── uploads/
-│
-├── index.faiss
-├── chunks.pkl
-
+├── index.faiss          # Vector index
+└── chunks.pkl            # Stored text chunks
 ```
 
----
-
-# ⚙ Installation
-
-Clone the repository:
+## Setup
 
 ```bash
-git clone https://github.com/your-username/pdf-rag-chatbot.git
-
-cd pdf-rag-chatbot
-```
-
-Install dependencies:
-
-```bash
+git clone https://github.com/TanishqKakkar/RAG_ON_PDF.git
+cd RAG_ON_PDF
 pip install -r requirements.txt
 ```
 
----
+Create a `.env` file in the project root:
 
-# 🔑 Environment Variables
-
-Create a `.env` file in the project root directory.
-
-```env
+```
 GROQ_API_KEY=your_groq_api_key
 ```
 
----
+## Run
 
-# ▶ Running the Application
-
-## Start Backend
-
+**Start backend:**
 ```bash
 python app.py
+# runs on http://127.0.0.1:5000
 ```
 
-Backend runs on:
-
-```text
-http://127.0.0.1:5000
-```
-
----
-
-## Start Frontend
-
+**Start frontend:**
 ```bash
 streamlit run frontend.py
+# runs on http://localhost:8501
 ```
 
-Frontend runs on:
+## How It Works
 
-```text
-http://localhost:8501
-```
+1. **Upload PDF** — processed via PyMuPDF and converted to text
+2. **Chunking** — text split into overlapping chunks
+3. **Embedding** — each chunk converted to vector embeddings
+4. **Vector Storage** — embeddings stored in a FAISS index
+5. **Query Processing** — user question embedded with the same model
+6. **Retrieval** — top-K relevant chunks retrieved from FAISS
+7. **Answer Generation** — retrieved chunks passed to Groq LLM for a context-aware answer
 
----
+## Future Improvements
 
-# 📖 How It Works
+- Multi-PDF support
+- Hybrid search (FAISS + BM25)
+- Re-ranking using cross-encoders
+- OCR support for scanned PDFs
+- User authentication
+- Cloud deployment
+- Conversation memory
+- Citation-aware responses
 
-### Step 1: Upload PDF
+## Author
 
-The uploaded PDF is processed using PyMuPDF and converted into text.
+**Tanishq Kakkar** — B.Tech CSE (AI & ML), Bennett University
 
-### Step 2: Chunking
+## License
 
-The extracted text is divided into overlapping chunks.
-
-### Step 3: Embedding Generation
-
-Each chunk is converted into vector embeddings using Sentence Transformers.
-
-### Step 4: Vector Storage
-
-Embeddings are stored inside a FAISS index.
-
-### Step 5: Query Processing
-
-The user question is embedded using the same embedding model.
-
-### Step 6: Retrieval
-
-Top-K most relevant chunks are retrieved from FAISS.
-
-### Step 7: Answer Generation
-
-Retrieved chunks are passed to the Groq LLM, which generates a context-aware answer.
-
----
-
-# 📸 Screenshots
-
-Add screenshots here after deployment.
-
-### Home Page
-
-<img width="1911" height="882" alt="image" src="https://github.com/user-attachments/assets/961d3cf0-e72a-42d7-bf7d-f5f67d6c242d" />
-
-
-### Upload PDF
-
-<img width="409" height="362" alt="image" src="https://github.com/user-attachments/assets/21c434ad-7ef0-4e45-ba80-25e01e0bff53" />
-
-
-### Chat Interface
-
-<img width="1151" height="623" alt="image" src="https://github.com/user-attachments/assets/6e198591-a124-4cbb-a47a-61fda022056c" />
-
-
-### Sources
-
-<img width="1240" height="607" alt="image" src="https://github.com/user-attachments/assets/e298d612-e1f3-4de4-b5de-9212e8f0cb05" />
-
-
----
-
-# 🎯 Future Improvements
-
-* Multi-PDF support
-* Hybrid Search (FAISS + BM25)
-* Re-ranking using Cross Encoders
-* OCR support for scanned PDFs
-* User authentication
-* Cloud deployment
-* Conversation memory
-* Citation-aware responses
-
----
-
-# 📄 License
-
-This project is open-source and available under the MIT License.
-
----
-
-# 👨‍💻 Author
-
-Tanishq Kakkar
-
-B.Tech CSE (AI & ML)
-
-Bennett University
+MIT License
